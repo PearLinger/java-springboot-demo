@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>JavaScaffold</artifactId>
+    <version>1.1.0-SNAPSHOT</version>
+    <name>JavaScaffold</name>
+    <description>JavaScaffold</description>
+    <packaging>pom</packaging>
+
+    <properties>
+        <java.version>1.8</java.version>
+        <maven.url>http://10.10.84.24:9800/nexus</maven.url>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <dependency.version>1.1.0-SNAPSHOT</dependency.version>
+    </properties>
+
+    <modules>
+        <module>dependence-management</module>
+    </modules>
+
+    <dependencies>
+
+    </dependencies>
+
+
+    <dependencyManagement>
+
+    </dependencyManagement>
+
+
+    <distributionManagement>
+        <!--maven上传配置-->
+        <snapshotRepository>
+            <id>nexus-snapshots</id>
+            <name>Nexus SnapShots Repository</name>
+            <url>${maven.url}/repository/maven-snapshots/</url>
+        </snapshotRepository>
+        <repository>
+            <id>nexus-release</id>
+            <name>Nexus Release Repository</name>
+            <url>${maven.url}/repository/maven-releases/</url>
+        </repository>
+    </distributionManagement>
+
+</project>
