@@ -1,0 +1,53 @@
+spring:
+  datasource:
+    druid:
+      url: jdbc:mysql://10.10.19.220:3306/mqtt?useUnicode=true&characterEncoding=UTF-8
+      username: worker
+      password: ffb0pds@j}zugFmvBgpo3t:p
+  redis:
+    host: 10.10.19.220
+    password: Cat$Box
+    port: 6379
+    database: 10
+  redis2:
+    database: 0
+
+  ## EMQX 配置信息，需要监控用户上下线，订阅其上下线状态监听的 Topic
+  mqtt:
+    url: ssl://airpet-test.ubtrobot.com:21000
+    userName: admin
+    password: 4Xomi!lpmyj}jw(0gctpuuOl
+    inbound:
+      clientId: im-monitor-inbound
+      topics: $share/monitor/$SYS/brokers/+/clients/+/+
+    outbound:
+      clientId: im-monitor-outbound
+    cleanSession: true
+
+swagger:
+  open: true
+
+dubbo:
+  registry:
+    address: zookeeper://10.10.19.220:2181
+  application:
+    name: ubtechinc-mqtt-monitor
+  protocol:
+    name: dubbo
+  scan:
+    basePackages: com.ubtechinc.service
+  consumer:
+    check: false
+
+    
+#power job配置    
+powerjob:
+  worker:
+    # akka 工作端口，可选，默认 27777
+    akka-port: ${POWERJOB_AKKA_PORT:27777}
+    # 接入应用名称，用于分组隔离，推荐填写 本 Java 项目名称
+    app-name: mqtt-monitor-worker
+    # 调度服务器地址，IP:Port 或 域名，多值逗号分隔
+    server-address: ${POWERJOB_SERVER_ADDRESS:10.10.19.220:7700}
+    # 持久化方式，可选，默认 disk
+    store-strategy: disk

@@ -21,6 +21,7 @@
 
     <modules>
         <module>dependence-management</module>
+        <module>demo/mqtt</module>
     </modules>
 
     <dependencies>
