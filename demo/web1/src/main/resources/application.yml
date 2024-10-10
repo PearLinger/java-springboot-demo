@@ -1,0 +1,71 @@
+#服务器配置
+server:
+  port: 8070
+
+
+## Spring 配置
+spring:
+  profiles:
+    active: dev
+  datasource:
+    druid:
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      initial-size: 5
+      max-active: 10
+      min-idle: 5
+  redis:
+    timeout: 6000
+    jedis:
+      pool:
+        min-idle: 5
+        max-idle: 10
+        max-active: 20
+        max-wait: -1
+        maxWaitMillis: 3000
+        testOnBorrow: true
+  mqtt:
+    client:
+      sub: im/msg/receive/%s
+      pub: im/msg/send/%s
+  application:
+    name: ubtechinc-mqtt-monitor
+
+#mybatis plus config
+mybatis-plus:
+  mapper-locations: classpath:com/ubtechinc/mapper/xml/*Mapper.xml
+  global-config:
+    db-config:
+      db-type: mysql
+      logic-delete-value: 1
+      logic-not-delete-value: 0
+      id-type: auto
+  configuration:
+    log-impl: org.apache.ibatis.logging.nologging.NoLoggingImpl
+
+
+# the swagger configuration
+swagger:
+  gloab-keys: X-UBT-AppId,X-UBT-DeviceId,authorization
+
+## Actuator  The Health monitor;
+management:
+  endpoints:
+    web:
+      exposure:
+        # 打开所有的监控点
+        include: "*"
+      # 自定义监控路径 monitor
+      base-path: /monitor
+  endpoint:
+    health:
+      show-details: always
+    shutdown:
+      # 通过指定接口关闭 SpringBoot
+      enabled: true
+# 描述项目基础信息
+info:
+  app:
+    name: ${spring.application.name}
+    port: ${server.port}
+    version: 1.0.0
+    author: deane.jia

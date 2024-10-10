@@ -1,7 +1,7 @@
 package com.banmenit.libcore.web.aspect;
 
+import com.banmenit.libcore.common.utils.JsonUtils;
 import com.banmenit.libcore.web.annotation.WebLog;
-import com.google.gson.Gson;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -16,6 +16,9 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.Method;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author lizrd
@@ -52,27 +55,29 @@ public class WebLogAspect {
         HttpServletRequest request = attributes.getRequest();
         // 获取 @WebLog 注解的描述信息
         String methodDescription = getAspectLogDescription(proceedingJoinPoint);
+
+        Enumeration<String> headerNames = request.getHeaderNames();
+        Map<String, String> headers = new HashMap<>();
+        while (headerNames.hasMoreElements()) {
+            String key = headerNames.nextElement();
+            String value = request.getHeader(key);
+            headers.put(key, value);
+        }
         // 打印请求相关参数
         logger.info("========================================== Start ==========================================");
         // 打印请求 url   描述信息   Http method    调用 controller 的全路径以及执行方法    请求的 IP
-        logger.info("URL  : {}  Description  : {}   HTTP Method  : {}   Class Method   : {}.{}    IP     : {}", request.getRequestURL().toString(), methodDescription,
+        logger.info("URL  : {}  Description  : {}   HTTP Method  : {}   Class Method   : {}.{}    IP     : {}  Headers         :{}", request.getRequestURL().toString(), methodDescription,
                 request.getMethod(), proceedingJoinPoint.getSignature().getDeclaringTypeName(), proceedingJoinPoint.getSignature().getName(),
-                request.getRemoteAddr());
-        // 打印请求入参
-        if (logLevel.equals("info")) {
-            logger.info("Request Args   : {}", new Gson().toJson(proceedingJoinPoint.getArgs()));
-        } else {
-            logger.debug("Request Args   : {}", new Gson().toJson(proceedingJoinPoint.getArgs()));
-        }
+                request.getRemoteAddr(),headers);
         long startTime = System.currentTimeMillis();
         Object result;
         try {
             result = proceedingJoinPoint.proceed();
             // 打印出参
             if (logLevel.equals("info")) {
-                logger.info("Response Args  : {}", new Gson().toJson(result));
+                logger.info("Response Args  : {}", JsonUtils.toJson(result));
             } else {
-                logger.debug("Response Args  : {}", new Gson().toJson(result));
+                logger.debug("Response Args  : {}", JsonUtils.toJson(result));
             }
         } finally {
             // 接口结束后换行，方便分割查看
@@ -89,7 +94,8 @@ public class WebLogAspect {
      * @return 描述信息
      * @throws Exception
      */
-    public String getAspectLogDescription(JoinPoint joinPoint)
+    public String
+    getAspectLogDescription(JoinPoint joinPoint)
             throws Exception {
         String targetName = joinPoint.getTarget().getClass().getName();
         String methodName = joinPoint.getSignature().getName();

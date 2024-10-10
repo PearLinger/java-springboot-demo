@@ -1,4 +1,4 @@
-package com.banmenit.demo.mqtt;
+package com.banmenit.demo.web;
 
 import cn.hutool.core.util.ObjectUtil;
 import lombok.SneakyThrows;
